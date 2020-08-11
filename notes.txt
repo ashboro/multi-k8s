@@ -20,7 +20,8 @@ travis encrypt-file service-account.json -r ashboro/multi-k8s -com
 Fixes for Travis "iv undefined" or"repository not known"
 updated 7-9-2020
 
-In the upcoming lecture we will be encrypting a service account file in the Travis container we created in the previous lecture. Travis is currently going through some transitions (.com vs .org), and you may end up getting an error like this when deploying:
+In the upcoming lecture we will be encrypting a service account file in the Travis container we created in the previous lecture. 
+Travis is currently going through some transitions (.com vs .org), and you may end up getting an error like this when deploying:
 
 iv undefined
 The command "openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d" failed and exited with 1 during .
