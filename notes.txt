@@ -124,3 +124,12 @@ You can fetch that script, and then execute it locally. It's well documented so 
 $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 $ chmod 700 get_helm.sh
 $ ./get_helm.sh
+
+
++++++++++++++++++++++++++++++
+
+Synergy QA specialists have solid knowledge of various Quality Assurance software tools, such as 
+-	Jasmine - a behavior-driven development framework for testing JavaScript code
+-	Gatling – a load and performance testing framework
+-	Locust - a user load testing tool, intended for load-testing web sites (or other systems) and figuring out how many concurrent users a system can handle.
+-	Junit – a unit testing framework for the Java programming language.
