@@ -14,7 +14,7 @@ spec:
         spec:
             containers:
                 - name: server
-                  image: ahsboro/multi-server # stephengrider/multi-server
+                  image: ashboro/multi-server # stephengrider/multi-server
                   ports:
                     - containerPort: 5000
                   env:
