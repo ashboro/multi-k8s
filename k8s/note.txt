@@ -1,1 +1,81 @@
 kubectl create secret generic pgpassword  --from-literal PGPASSWORD=password123
+
+
+
+target
+------
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    certmanager.k8s.io/cluster-issuer: 'letsencrypt-prod'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+spec:
+  tls:
+    - hosts:
+        - k8s-multi.com
+        - www.k8s-multi.com
+      secretName: k8s-multi-com
+  rules:
+    - host: k8s-multi.com
+      http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
+    - host: www.k8s-multi.com
+      http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
+
+
+Before --- >
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # UPDATE THIS LINE ABOVE
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            # UPDATE THIS LINE ABOVE
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            # UPDATE THIS LINE ABOVE
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
+
+
+
+GBP 12,180 
+
+
+Cost of living difference - Teesside University
+GBP 12,180 for year or GBP 1,015
+
+Oxford 
+Between GBP 1,135 and GBP1,650 per month depending on standard of accomodation

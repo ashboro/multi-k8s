@@ -7,18 +7,45 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     # UPDATE THIS LINE ABOVE
+    # *** added for SSL (1)
+    certmanager.k8s.io/cluster-issuer: 'letsencrypt-prod'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    # -- added for SSL (1)
 spec:
+  # *** added for SSL (2)
+  tls:
+    - hosts:
+        - epicview.info
+        - www.epicview.info 
+      secretName: epicview.info
+  # -- added for SSL (2)
   rules:
-    - http:
+    # *** added for SSL (3) #
+    - host:   epicview.info
+    # --  added for SSL (3) #
+      - http:
+          paths:
+            - path: /?(.*)
+              # UPDATE THIS LINE ABOVE
+              backend:
+                serviceName: client-cluster-ip-service
+                servicePort: 3000
+            - path: /api/?(.*)
+              # UPDATE THIS LINE ABOVE
+              backend:
+                serviceName: server-cluster-ip-service
+                servicePort: 5000
+
+      # *** added for SSL (4) #
+      - host:  www.epicview.info 
+      http:
         paths:
           - path: /?(.*)
-            # UPDATE THIS LINE ABOVE
             backend:
               serviceName: client-cluster-ip-service
               servicePort: 3000
           - path: /api/?(.*)
-            # UPDATE THIS LINE ABOVE
             backend:
               serviceName: server-cluster-ip-service
               servicePort: 5000
-
+      # -- added for SSL (4) #
