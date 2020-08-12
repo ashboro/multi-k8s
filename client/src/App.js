@@ -12,9 +12,10 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Epicview Info - React Version 8.0</h1>
-            <Link to="/">Home</Link>
-            <Link to="/otherpage">Other Page</Link>
+            <h1 className="App-title">Epicview Info - React Version 9.0</h1>
+            <Link className="App-link" to="/">Home</Link>
+            <span>&nbsp; &nbsp;&nbsp; || &nbsp;&nbsp;</span>
+            <Link className="App-link" to="/otherpage">Other Page</Link>
           </header>
           <div>
             <Route exact path="/" component={Fib} />

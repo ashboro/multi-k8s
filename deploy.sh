@@ -1,6 +1,6 @@
 docker build -t ashboro/multi-client:latest -t ashboro/multi-client:$SHA -f ./client/Dockerfile ./client
 docker build -t ashboro/multi-server:latest -t ashboro/multi-server:$SHA   -f ./server/Dockerfile ./server
-docker build -t ashboro/multi-worker:latest -t ashboro/multi-worker:$SHA -f ./woker/Dockerfile ./worker
+docker build -t ashboro/multi-worker:latest -t ashboro/multi-worker:$SHA -f ./worker/Dockerfile ./worker
 docker push ashboro/multi-client:latest
 docker push ashboro/multi-server:latest
 docker push ashboro/multi-worker:latest
