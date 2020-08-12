@@ -1,6 +1,6 @@
 kubectl create secret generic pgpassword  --from-literal PGPASSWORD=password123
 
-
+exiting dev mode because first deploy failed: 2/3 deployment(s) failed
 
 target
 ------

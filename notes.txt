@@ -1,18 +1,44 @@
-Listing files to watch...
- - ashboro/multi-client
- - ashboro/multi-server
- - ashboro/multi-worker
-Generating tags...
- - ashboro/multi-client -> ashboro/multi-client:4898762
- - ashboro/multi-server -> ashboro/multi-server:4898762
- - ashboro/multi-worker -> ashboro/multi-worker:4898762
-Checking cache...
- - ashboro/multi-client: Found. Tagging
- - ashboro/multi-server: Found. Tagging
- - ashboro/multi-worker: Found. Tagging
-Tags used in deployment:
- - ashboro/multi-client -> 
+Syncing 1 files for ashboro/multi-client:29bf4dc317c612ba2b2d27d8fe3bdd0190f3df076bdfd5de1fa2d80994d15f5f
 
+
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    - image: ashboro/multi-client
+      context: client
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+        '**/*.css': .
+        '**/*.html': .
+    #- image: ashboro/multi-server
+    #  context: server
+    #  docker:
+    #    dockerfile: Dockerfile.dev
+    #  sync:
+    #    '**/*.js': .
+    #- image: ashboro/multi-worker
+    #   context: worker
+    #  docker:
+    #    dockerfile: Dockerfile.dev
+    #  sync:
+    #    '**/*.js': .
+deploy:
+  kubectl:
+    manifests:
+      - k8s/client-deployment.yaml
+      #- k8s/server-deployment.yaml
+      #- k8s/worker-deployment.yaml
+      #- k8s/server-cluster-ip-service.yaml
+      #- k8s/client-cluster-ip-service.yaml
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+PS D:\docker\try\udemy259>
 
 
 Ruby Version Fix
