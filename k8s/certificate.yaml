@@ -1,0 +1,28 @@
+apiVersion: certmanager.k8s.io/vlapha1
+kind: Certificate
+metadata: 
+    name: k8s-multi-com-tls
+spec:
+    secretName: k8s-multi-com
+    issuerRef:
+        name: letsencrypt-prod
+        kind: ClusterIssuer
+    commonName: k8s-multi.com
+    dnsNames:
+        - epicview.info
+        - www.epicview.info       
+    acme:
+        config:
+            - http01:
+                ingressClass: nginx
+              domains:
+                - epicview.info
+                - www.epicview.info 
+            
+
+            
+    
+       
+       
+       
+    
