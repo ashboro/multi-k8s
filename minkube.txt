@@ -1,1 +1,634 @@
-> minikube start --vm-driver=hyperv minikube
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+ minikube start --vm-driver=hyperv minikube
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+kubectl apply -f client-pod.yml
+ kubectl apply -f client-node-port.yaml
+
+ kubectl delete -f t.yml
+
+ kubectl delete -f t.yaml
+kubectl delete -f tport.yaml
+service "client-node-port" deleted
+ kubectl get pods
+ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   68m
+
+kubectl apply -f client-pod.yaml
+
+
+kubectl delete -f client-pod.yaml
+
+ kubectl apply -f client-deployment.yaml
+
+
+ kubectl get deployments
+
+ kubectl get pods -o wide
+
+kubectl describe pods
+
+ping 172.17.62.228
+
+http://172.17.62.228:31515/
+
+
+ kubeconfig endpoint: extract IP: "minikube" does not appear in C:\Users\ashle\.kube\config
+
+ 209
+
+  eval $(minikube docker-env)
+
+  minikube start -p ClusterName
+
+   you started your minikube instance with
+
+minikube start -p ClusterName
+
+>Then you'll have to put the profile name for each command
+
+minikube docker-env -p ClusterName
+
+So you finally can run next command to get it work
+
+> eval $(minikube docker-env -p YourClusterName)
+
+++++++++++++++++++
+https://www.youtube.com/watch?v=YiODgG1tneI
+
+Hyper-Virtual -- switch manager
+
+from https://www.youtube.com/watch?v=5-LHcpkRA58&t=4s
+
+minikube start --vm-driver="hyperv" --hyperv-virtual-switch="vEthernet (Default Switch)"
+
+kubectl version
+
+need to see 2 client version
+-----
+Get-NetAdapter
+
+ <command> --help" for more information about a given command.
+
+https://mikefrobbins.com/2018/11/08/managing-the-hyper-v-default-switch-in-windows-10-version-1709-and-higher-with-powershell/
+
+Get-NetAdapter                                    --- Get-NetIPInterface -InterfaceAlias 'vEthernet (Default Switch)'
+
+Name                      InterfaceDescription                    ifIndex Status       MacAddress
+----                      --------------------                    ------- ------       ----------
+Ethernet                  Realtek PCIe FE Family Controller            21 Disconnected 50-9A-4C-...
+vEthernet (Default Swi... Hyper-V Virtual Ethernet Adapter             42 Up           00-15-5D-...
+Bluetooth Network Con...4 Bluetooth Device (Personal Area Ne...#4      17 Disconnected D4-6A-6A-...
+Wi-Fi                     Qualcomm QCA9377 802.11ac Wireless A...      12 Up           D4-6A-6A-...
+
+
+---
+
+https://www.youtube.com/watch?v=E8VxEkyWZG8
+
+---
+
+ minikube config set vm-driver hyperv
+
+minikube delete
+
+---on restart setss up hyperv
+
+minikube start --vm-driver=hyperv --hyperv-virtual-switch=minikube    
+
+Appears to create and then delete VM??   - 8 times as below
+
+And eventually after 8 tries(see below -- out --) gets:
+
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373 Advice:Try 'minikube delete', and disable any conflicting VPN or firewall software URL: Issues:[7072] ShowIssueLink:false}
+* [CREATE_TIMEOUT] error provisioning host Failed to start host: creating host: create host timed out in 240.000000 seconds
+* Suggestion: Try 'minikube delete', and disable any conflicting VPN or firewall software
+* Related issue: https://github.com/kubernetes/minikube/issues/7072
+
+E0809 11:46:39.339076   24368 status.go:297] failed to get driver ip: getting IP: IP not found
+E0809 11:46:39.342041   24368 status.go:207] status error: getting IP: IP not found
+
+minikube
+type: Control Plane
+host: Error
+kubelet: Nonexistent
+apiserver: Nonexistent
+kubeconfig: Nonexistent
+
+try start again ---
+
++++ HERE ++++++
+
+I had this same trouble on my machine. After some troubleshooting and head banging, it became apparent that the external network adapter had an ethernet adapter selected that was not connected to a network. (ethernet selected, instead of the wireless adapter). Of course an IP wont be allocated on an external network if none is connected.
+
+Once the connected wireless adapter was selected (an adapter actually connected to a DHCP network), all was good.
+While rather silly on the end, I hope this helps someone with the same "IP loop" issue
+
+https://stackoverflow.com/questions/61340962/minikube-keeps-failing-on-creation-starthost-failed-but-will-try-again-creat
+
+
+ kubectl version
+Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.0", GitCommit:"9e991415386e4cf155a24b1da15becaa390438d8", GitTreeState:"clean", BuildDate:"2020-03-25T14:58:59Z", GoVersion:"go1.13.8", Compiler:"gc", Platform:"windows/amd64"}
+Server Version: version.Info{Major:"1", Minor:"16+", GitVersion:"v1.16.6-beta.0", GitCommit:"e7f962ba86f4ce7033828210ca3556393c377bcc", GitTreeState:"clean", BuildDate:"2020-01-15T08:18:29Z", GoVersion:"go1.13.5", Compiler:"gc", Platform:"linux/amd64"}
+
+
+after doing above and deleting minikube from HypreV run again to get:
+
+PS C:\WINDOWS\system32> minikube start --vm-driver=hyperv minikube
+* minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing hyperv VM for "minikube" ...
+* Preparing Kubernetes v1.18.3 on Docker 19.03.12 ...
+* Verifying Kubernetes components...
+* Enabled addons: default-storageclass, storage-provisioner
+* Done! kubectl is now configured to use "minikube"
+PS C:\WINDOWS\system32> minikube ip
+192.168.0.60
+PS C:\WINDOWS\system32> minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+ 192.168.0.60:31515
+ 31515
+++++++  cheat sheet https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+test - k8s 
+https://stackoverflow.com/questions/40767164/expose-port-in-minikube#:~:text=minikube%20runs%20on%20something%20like%20192.168.99.100.%20So%20you,the%20minikube%20ip%2C%20run%20the%20command%20minikube%20ip.
+
+$ kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+deployment "hello-minikube" created
+
+XX 
+ kubectl expose deployment hello-minikube --port=80 --target-port=8000 --type=NodePort
+service "hello-minikube" exposed
+
+PS D:\docker\try\udemy113\k8s\hw> kubectl get svc
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+hello-minikube   NodePort    10.111.35.32   <none>        80:30938/TCP   9s
+kubernetes       ClusterIP   10.96.0.1      <none>        443/TCP        64m
+P
+
+
+ kubectl expose deployment hello-minikube --port=80 --target-port=8000
+service/hello-minikube exposed
+
+$ kubectl get svc
+NAME             CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+hello-minikube   10.0.0.102   <nodes>       8080/TCP   7s
+kubernetes       10.0.0.1     <none>        443/TCP    13m
+
+$ minikube service hello-minikube
+Opening kubernetes service default/hello-minikube in default browser...
+This command will open the specified service in your default browser. Here is the minikube service documentation: https://github.com/kubernetes/minikube/blob/master/docs/minikube_service.md
+
+There is also a --url option for printing the url of the service which is what gets opened in the browser:
+
+$ minikube service hello-minikube --url
+
+
+http://192.168.99.100:31167
+-- out --)
+
+minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on user configuration
+* Starting control plane node minikube in cluster minikube
+* Creating hyperv VM (CPUs=2, Memory=4000MB, Disk=20000MB) ...
+* Stopping node "minikube"  ...
+* Powering off "minikube" via SSH ...
+* Deleting "minikube" in hyperv ...
+! StartHost failed, but will try again: creating host: create host timed out in 240.000000 seconds
+E0809 11:28:05.041400   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+E0809 11:28:07.684675   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+* Creating hyperv VM (CPUs=2, Memory=4000MB, Disk=20000MB) ...
+E0809 11:28:10.734814   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+E0809 11:28:14.383814   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+E0809 11:28:17.188956   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+E0809 11:28:20.731690   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
+E0809 11:28:23.900740   30308 main.go:111] libmachine: [stderr =====>] : Hyper-V\Get-VM : Hyper-V was unable to find a virtual machine with name "minikube".
+At line:1 char:3
++ ( Hyper-V\Get-VM minikube ).state
++   ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (minikube:String) [Get-VM], VirtualizationException
+    + FullyQualifiedErrorId : InvalidParameter,Microsoft.HyperV.PowerShell.Commands.GetVM
+
+
++++++++++++
+
+
+ StartHost failed, but will try again: provision: Temporary Error: NewSession: new client: new client: 
+ ssh: handshake failed: ssh: unable to authenticate, attempted methods [publickey none], no supported methods remain
+
+
+Add your key to your ssh-agent:
+
+ssh-add ../.ssh/terraform
+and use agent = true in your configuration. The case should work for you
+
+Modify your configuration to use the key directly with
+
+secret_key = "../.ssh/terraform"
+or so. Please consult the documentation for more specific syntax.
+
++++++++++++++
+
+* minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing hyperv VM for "minikube" ...
+! StartHost failed, but will try again: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+* Updating the running hyperv "minikube" VM ...
+* Failed to start hyperv VM. "minikube start" may fix it: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+*
+E0809 11:00:11.068124   27252 exit.go:76] &{ID:SSH_AUTH_FAILURE Err:Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+provision
+k8s.io/minikube/pkg/minikube/machine.fixHost
+        /app/pkg/minikube/machine/fix.go:79
+k8s.io/minikube/pkg/minikube/machine.StartHost
+        /app/pkg/minikube/machine/start.go:90
+k8s.io/minikube/pkg/minikube/node.startHost
+        /app/pkg/minikube/node/start.go:401
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:345
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373
+Failed to start host
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:347
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373 Advice:Your host is failing to route packets to the minikube VM. If you have VPN software, 
+        try turning it off or configuring it so that it does not re-route traffic to the VM IP. 
+        If not, check your VM environment routing options. URL:https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/ Issues:[3930] ShowIssueLink:false}
+* [SSH_AUTH_FAILURE] error provisioning host Failed to start host: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+* Suggestion: Your host is failing to route packets to the minikube VM. If you have VPN software, try turning it off or configuring it so that it does not re-route traffic to the VM IP. If not, check your VM environment routing options.
+* Documentation: https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
+* Related issue: https://github.com/kubernetes/minikube/issues/3930
+
+set HTTP_PROXY=http://<proxy hostname:port>
+set HTTPS_PROXY=https://<proxy hostname:port>
+set NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24
+
+minikube version: v1.12.2
+commit: be7c19d391302656d27f1f213657d925c4e1cfc2-dirty
+PS D:\docker> minikube start --vm-driver="hyperv" --hyperv-virtual-switch="minikube"                * minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Updating the running hyperv "minikube" VM ...
+! StartHost failed, but will try again: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [publickey none], no supported methods remain
+* Updating the running hyperv "minikube" VM ...
+* Failed to start hyperv VM. "minikube start" may fix it: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+*
+E0809 09:49:51.963924   26012 exit.go:76] &{ID:SSH_AUTH_FAILURE Err:Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+provision
+k8s.io/minikube/pkg/minikube/machine.fixHost
+        /app/pkg/minikube/machine/fix.go:79
+k8s.io/minikube/pkg/minikube/machine.StartHost
+        /app/pkg/minikube/machine/start.go:90
+k8s.io/minikube/pkg/minikube/node.startHost
+        /app/pkg/minikube/node/start.go:401
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:345
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373
+Failed to start host
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:347
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373 Advice:Your host is failing to route packets to the minikube VM. If you have VPN software, try turning it off or configuring it so that it does not re-route traffic to the VM IP. If not, check your VM environment routing options. URL:https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/ Issues:[3930] ShowIssueLink:false}
+* [SSH_AUTH_FAILURE] error provisioning host Failed to start host: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+* Suggestion: Your host is failing to route packets to the minikube VM. If you have VPN software, try turning it off or configuring it so that it does not re-route traffic to the VM IP. If not, check your VM environment routing options.
+* Documentation: https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
+* Related issue: https://github.com/kubernetes/minikube/issues/3930
+
+
+
+
+
+------------------------
+ minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing hyperv VM for "minikube" ...
+! StartHost failed, but will try again: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+* Updating the running hyperv "minikube" VM ...
+* Failed to start hyperv VM. "minikube start" may fix it: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [publickey none], no supported methods remain
+*
+E0809 08:12:10.253694   25852 exit.go:76] &{ID:SSH_AUTH_FAILURE Err:Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [publickey none], no supported methods remain
+provision
+k8s.io/minikube/pkg/minikube/machine.fixHost
+        /app/pkg/minikube/machine/fix.go:79
+k8s.io/minikube/pkg/minikube/machine.StartHost
+        /app/pkg/minikube/machine/start.go:90
+k8s.io/minikube/pkg/minikube/node.startHost
+        /app/pkg/minikube/node/start.go:401
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:345
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373
+Failed to start host
+k8s.io/minikube/pkg/minikube/node.startMachine
+        /app/pkg/minikube/node/start.go:347
+k8s.io/minikube/pkg/minikube/node.Provision
+        /app/pkg/minikube/node/start.go:234
+k8s.io/minikube/cmd/minikube/cmd.provisionWithDriver
+        /app/cmd/minikube/cmd/start.go:272
+k8s.io/minikube/cmd/minikube/cmd.runStart
+        /app/cmd/minikube/cmd/start.go:166
+github.com/spf13/cobra.(*Command).execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:846
+github.com/spf13/cobra.(*Command).ExecuteC
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:950
+github.com/spf13/cobra.(*Command).Execute
+        /go/pkg/mod/github.com/spf13/cobra@v1.0.0/command.go:887
+k8s.io/minikube/cmd/minikube/cmd.Execute
+        /app/cmd/minikube/cmd/root.go:106
+main.main
+        /app/cmd/minikube/main.go:71
+runtime.main
+        /usr/local/go/src/runtime/proc.go:203
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1373 Advice:Your host is failing to route packets to the minikube VM. 
+        
+        
+If you have VPN software, try turning it off or configuring it so that it does not re-route traffic to the VM IP. If not, check your VM environment routing options. 
+
+URL:https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/ Issues:[3930] ShowIssueLink:false}
+
+* [SSH_AUTH_FAILURE] error provisioning host Failed to start host: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [publickey none], no supported methods remain
+* Suggestion: Your host is failing to route packets to the minikube VM. If you have VPN software, try turning it off or configuring it so that it does not re-route traffic to the VM IP. If not, check your VM environment routing options.
+* Documentation: https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
+* Related issue: https://github.com/kubernetes/minikube/issues/3930
+
+
++++++++++++++++++
+
+ StartHost failed, but will try again: provision: Temporary Error: NewSession: new client: new client: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+
+
+PS D:\docker> minikube start --vm-driver="hyperv" --hyperv-virtual-switch="vEthernet (Default Switch)"
+* minikube v1.12.2 on Microsoft Windows 10 Pro 10.0.18362 Build 18362
+  - KUBECONFIG=C:\Users\ashle\.kube\config
+* Using the hyperv driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing hyperv VM for "minikube" ...
+E0809 07:52:49.387022   26480 main.go:111] libmachine: [stderr =====>] : Hyper-V\Start-VM : 'minikube' failed to start.
+Not enough memory in the system to start the virtual machine minikube.
+Could not initialize memory: Ran out of memory (0x8007000E).
+'minikube' failed to start. (Virtual machine ID EB6385F6-F955-453C-A065-8B513D2A5272)
+Not enough memory in the system to start the virtual machine minikube with ram size 4000
+megabytes. (Virtual machine ID EB6385F6-F955-453C-A065-8B513D2A5272)
+'minikube' could not initialize memory: Ran out of memory (0x8007000E). (Virtual machine ID
+EB6385F6-F955-453C-A065-8B513D2A5272)
+At line:1 char:1
++ Hyper-V\Start-VM minikube
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : FromStdErr: (:) [Start-VM], VirtualizationException
+    + FullyQualifiedErrorId : OutOfMemory,Microsoft.HyperV.PowerShell.Commands.StartVM
+
+
+! StartHost failed, but will try again: driver start: exit status 1
+* Restarting existing hyperv VM for "minikube" ...
+E0809 07:53:01.628486   26480 main.go:111] libmachine: [stderr =====>] : Hyper-V\Start-VM : 'minikube' failed to start.
+Not enough memory in the system to start the virtual machine minikube.
+Could not initialize memory: Ran out of memory (0x8007000E).
+'minikube' failed to start. (Virtual machine ID EB6385F6-F955-453C-A065-8B513D2A5272)
+Not enough memory in the system to start the virtual machine minikube with ram size 4000
+megabytes. (Virtual machine ID EB6385F6-F955-453C-A065-8B513D2A5272)
+'minikube' could not initialize memory: Ran out of memory (0x8007000E). (Virtual machine ID
+EB6385F6-F955-453C-A065-8B513D2A5272)
+At line:1 char:1
++ Hyper-V\Start-VM minikube
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : FromStdErr: (:) [Start-VM], VirtualizationException
+    + FullyQualifiedErrorId : OutOfMemory,Microsoft.HyperV.PowerShell.Commands.StartVM
+
+
+* Failed to start hyperv VM. "minikube start" may fix it: driver start: exit status 1
+*
+X error provisioning host: Failed to start host: driver start: exit status 1
+*
+* minikube is exiting due to an error. If the above message is not useful, open an issue:
+  - https://github.com/kubernetes/minikube/issues/new/choose
+
++++++++++++++++
+
+
+Kubernetes version: v1.18.3
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[certs] Using certificateDir folder "/var/lib/minikube/certs"
+[certs] Using existing ca certificate authority
+[certs] Using existing apiserver certificate and key on disk
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [clustername localhost] and IPs [172.17.0.3 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [clustername localhost] and IPs [172.17.0.3 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+[kubelet-check] Initial timeout of 40s passed.
+
+        Unfortunately, an error has occurred:
+                timed out waiting for the condition
+
+        This error is likely caused by:
+                - The kubelet is not running
+                - The kubelet is unhealthy due to a misconfiguration of the node in some way (required cgroups disabled)
+
+        If you are on a systemd-powered system, you can try to troubleshoot the error with the following commands:
+                - 'systemctl status kubelet'
+                - 'journalctl -xeu kubelet'
+
+        Additionally, a control plane component may have crashed or exited when started by the container runtime.
+        To troubleshoot, list all containers using your preferred container runtimes CLI.
+
+        Here is one example how you may list all Kubernetes containers running in docker:
+                - 'docker ps -a | grep kube | grep -v pause'
+                Once you have found the failing container, you can inspect its logs with:
+                - 'docker logs CONTAINERID'
+
+
+stderr:
+W0808 15:13:02.070110     759 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+        [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+        [WARNING FileContent--proc-sys-net-bridge-bridge-nf-call-iptables]: /proc/sys/net/bridge/bridge-nf-call-iptables does not exist
+        [WARNING Service-Kubelet]: kubelet service is not enabled, please run 'systemctl enable kubelet.service'
+W0808 15:13:05.334701     759 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+W0808 15:13:05.336050     759 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+error execution phase wait-control-plane: couldn't initialize a Kubernetes cluster
+To see the stack trace of this error execute with --v=5 or higher

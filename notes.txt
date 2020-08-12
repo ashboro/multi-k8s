@@ -1,3 +1,20 @@
+Listing files to watch...
+ - ashboro/multi-client
+ - ashboro/multi-server
+ - ashboro/multi-worker
+Generating tags...
+ - ashboro/multi-client -> ashboro/multi-client:4898762
+ - ashboro/multi-server -> ashboro/multi-server:4898762
+ - ashboro/multi-worker -> ashboro/multi-worker:4898762
+Checking cache...
+ - ashboro/multi-client: Found. Tagging
+ - ashboro/multi-server: Found. Tagging
+ - ashboro/multi-worker: Found. Tagging
+Tags used in deployment:
+ - ashboro/multi-client -> 
+
+
+
 Ruby Version Fix
 updated 7-27-2020
 
