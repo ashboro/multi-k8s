@@ -15,6 +15,14 @@ minikube ip
 for the IP
 
 
+=====
+GLOUD
+
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
+
+
+
+=====
 
 Did we a get a schedule for the SPIS demo or are Synergy still to come back to us on that?
 

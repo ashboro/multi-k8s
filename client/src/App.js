@@ -12,7 +12,7 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Epicview Technology Info - React Version 1.1</h1>
+            <h1 className="App-title">Epicview Technology Info - React Version 1.2</h1>
             <Link className="App-link" to="/">Home</Link>
             <span>&nbsp; &nbsp;&nbsp; || &nbsp;&nbsp;</span>
             <Link className="App-link" to="/otherpage">Other Page</Link>
