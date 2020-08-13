@@ -12,7 +12,7 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Epicview Info - React Version x.1</h1>
+            <h1 className="App-title">Epicview Technology Info - React Version 1.1</h1>
             <Link className="App-link" to="/">Home</Link>
             <span>&nbsp; &nbsp;&nbsp; || &nbsp;&nbsp;</span>
             <Link className="App-link" to="/otherpage">Other Page</Link>
@@ -21,6 +21,19 @@ class App extends Component {
             <Route exact path="/" component={Fib} />
             <Route path="/otherpage" component={OtherPage} />
           </div>
+
+          <div>    
+          <table id="location" border='1'>
+              <tr>
+                <tr>
+
+                    <th width="30%">Name                      </th>
+                    <th width="30%">Price                     </th>
+                    <th width="30%">Category                  </th>
+                </tr>
+              </tr>
+          </table>
+          </div>  
         </div>
       </Router>
     );

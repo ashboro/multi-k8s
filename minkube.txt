@@ -2,11 +2,21 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+in PS admin but make sure DockerDesktopVM is @ 20000MB
+and minkube is turned off on HyperV
 
- minikube start --vm-driver=hyperv minikube
+minikube start --vm-driver=hyperv minikube
+
+minikube version
+kubectl version
+
+minikube ip
+
+for the IP
 
 
 
+Did we a get a schedule for the SPIS demo or are Synergy still to come back to us on that?
 
 
 
